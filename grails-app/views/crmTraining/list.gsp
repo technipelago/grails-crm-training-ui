@@ -107,11 +107,12 @@
             </g:form>
         </div>
 
-        <div class="span3">
-
-        </div>
-
     </div>
+
+    <div class="span3">
+        <tmpl:events list="${eventList}"/>
+    </div>
+
 </div>
 
 </body>

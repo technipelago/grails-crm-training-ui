@@ -23,7 +23,8 @@ class CrmTrainingController {
         def cmd = new CrmTrainingQueryCommand()
         def query = params.getSelectionQuery()
         bindData(cmd, query ?: WebUtils.getTenantData(request, 'crmTrainingQuery'))
-        [cmd: cmd]
+        def events = crmTrainingService.listTrainingEvents([fromDate:new Date() - 5], [max: 5, sort: 'startTime', order: 'asc'])
+        [cmd: cmd, eventList: events]
     }
 
     def list() {
@@ -46,10 +47,11 @@ class CrmTrainingController {
         def result
         try {
             result = selectionService.select(uri, params)
-            if (result.size() == 1) {
+            if (result.totalCount == 1) {
                 redirect action: "show", id: result.head().ident()
             } else {
-                [crmTrainingList: result, crmTrainingTotal: result.totalCount, selection: uri]
+                def events = crmTrainingService.listTrainingEvents([fromDate:new Date() - 5], [max: 5, sort: 'startTime', order: 'asc'])
+                [crmTrainingList: result, crmTrainingTotal: result.totalCount, selection: uri, eventList: events]
             }
         } catch (Exception e) {
             flash.error = e.message

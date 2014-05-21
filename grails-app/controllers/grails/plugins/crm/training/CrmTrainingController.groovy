@@ -170,7 +170,7 @@ class CrmTrainingController {
     }
 
     def deleteFavorite(Long id) {
-        def crmTraining = crmTrainingService.getContact(id)
+        def crmTraining = crmTrainingService.getTraining(id)
         if (!crmTraining) {
             flash.error = message(code: 'crmTraining.not.found.message', args: [message(code: 'crmTraining.label', default: 'Training'), id])
             redirect action: 'index'

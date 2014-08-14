@@ -1,6 +1,6 @@
 class CrmTrainingUiGrailsPlugin {
-    def groupId = "grails.crm"
-    def version = "1.2.0"
+    def groupId = ""
+    def version = "2.0.0"
     def grailsVersion = "2.2 > *"
     def dependsOn = [:]
     def loadAfter = ['crmTraining']
@@ -13,9 +13,9 @@ class CrmTrainingUiGrailsPlugin {
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''\
-Provides (admin) user interface for training administration in GR8 CRM
+Provides (admin) user interface for training administration in GR8 CRM applications
 '''
-    def documentation = "http://grails.org/plugin/crm-training-ui"
+    def documentation = "http://gr8crm.github.io/plugins/crm-training-ui"
     def license = "APACHE"
     def organization = [name: "Technipelago AB", url: "http://www.technipelago.se/"]
     def issueManagement = [system: "github", url: "https://github.com/technipelago/grails-crm-training-ui/issues"]

@@ -52,7 +52,7 @@
                             <div class="row-fluid">
                                 <f:field property="number" label="crmTraining.number.label" input-class="span6"/>
                                 <f:field property="name" label="crmTraining.name.label" input-class="span11"/>
-                                <f:field property="url" label="crmTraining.url.label" input-class="span6"/>
+                                <f:field property="url" label="crmTraining.url.label" input-class="span11"/>
                             </div>
                         </div>
 

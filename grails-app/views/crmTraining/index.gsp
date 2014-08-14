@@ -34,38 +34,39 @@
                         <f:field property="type" label="crmTraining.type.label"
                                  input-placeholder="${message(code: 'crmTrainingQueryCommand.type.placeholder', default: '')}">
                             <g:select from="${CrmTrainingType.findAllByTenantId(TenantUtils.tenant)}"
-                                      name="type"
-                                      optionKey="name" class="span12" noSelection="['': '']"/>
+                                      name="type" optionKey="param" class="span12" noSelection="['': '']"/>
                         </f:field>
-                    </div>
-
-                    <div class="span4">
-                        <f:field property="customer" label="crmTrainingQueryCommand.customer.label" input-class="span12"
-                                 input-placeholder="${message(code: 'crmTrainingQueryCommand.customer.placeholder', default: '')}"/>
                     </div>
 
                     <div class="span4">
                         <f:field property="fromDate">
                             <div class="inline input-append date"
-                                 data-date="${formatDate(format: 'yyyy-MM-dd', date: cmd.fromDate ?: new Date())}">
+                                 data-date="${cmd.fromDate ?: new Date().format('yyyy-MM-dd')}">
                                 <g:textField name="fromDate" class="span12" size="10" placeholder="ÅÅÅÅ-MM-DD"
-                                             value="${formatDate(format: 'yyyy-MM-dd', date: cmd.fromDate)}"/><span
-                                    class="add-on"><i
-                                        class="icon-th"></i></span>
+                                             value="${cmd.fromDate}"/><span
+                                    class="add-on"><i class="icon-th"></i></span>
                             </div>
                         </f:field>
                         <f:field property="toDate">
                             <div class="inline input-append date"
-                                 data-date="${formatDate(format: 'yyyy-MM-dd', date: cmd.toDate ?: new Date())}">
+                                 data-date="${cmd.toDate ?: new Date().format('yyyy-MM-dd')}">
                                 <g:textField name="toDate" class="span12" size="10" placeholder="ÅÅÅÅ-MM-DD"
-                                             value="${formatDate(format: 'yyyy-MM-dd', date: cmd.toDate)}"/><span
-                                    class="add-on"><i
-                                        class="icon-th"></i></span>
+                                             value="${cmd.toDate}"/><span
+                                    class="add-on"><i class="icon-th"></i></span>
                             </div>
                         </f:field>
 
+                        <f:field property="location" label="crmTask.location.label"
+                                 input-class="span12"
+                                 input-placeholder="${message(code: 'crmTrainingQueryCommand.location.placeholder', default: '')}"/>
+                    </div>
+
+                    <div class="span4">
+                        <f:field property="customer" label="crmTrainingQueryCommand.customer.label" input-class="span12"
+                                 input-placeholder="${message(code: 'crmTrainingQueryCommand.customer.placeholder', default: '')}"/>
+
                         <f:field property="tags" label="crmTrainingQueryCommand.tags.label">
-                            <g:textField name="tags" class="span11" value="${cmd.tags}"
+                            <g:textField name="tags" class="span12" value="${cmd.tags}"
                                          placeholder="${message(code: 'crmTrainingQueryCommand.tags.placeholder', default: '')}"/>
                         </f:field>
                     </div>

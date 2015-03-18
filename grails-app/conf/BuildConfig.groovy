@@ -35,7 +35,7 @@ grails.project.dependency.resolution = {
 
         compile ":decorator:1.1"
         compile ":user-tag:0.6"
-        compile ":selection:0.9.7"
+        compile ":selection:0.9.8"
         compile ":selection-repository:0.9.3"
     }
 }

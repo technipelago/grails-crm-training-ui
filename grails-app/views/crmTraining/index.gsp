@@ -39,22 +39,28 @@
                     </div>
 
                     <div class="span4">
-                        <f:field property="fromDate">
-                            <div class="inline input-append date"
-                                 data-date="${cmd.fromDate ?: new Date().format('yyyy-MM-dd')}">
-                                <g:textField name="fromDate" class="span12" size="10" placeholder="ÅÅÅÅ-MM-DD"
-                                             value="${cmd.fromDate}"/><span
-                                    class="add-on"><i class="icon-th"></i></span>
+                        <div class="row-fluid">
+                            <div class="control-group">
+                                <label class="control-label"><g:message code="crmTaskQueryCommand.fromDate.label"/></label>
+                                <div class="controls">
+                                    <div class="input-append date">
+                                        <g:textField name="fromDate" class="span11" size="10" placeholder="ÅÅÅÅ-MM-DD"
+                                                     value="${cmd.fromDate}"/><span
+                                            class="add-on"><i class="icon-th"></i></span>
+                                    </div>
+                                </div>
                             </div>
-                        </f:field>
-                        <f:field property="toDate">
-                            <div class="inline input-append date"
-                                 data-date="${cmd.toDate ?: new Date().format('yyyy-MM-dd')}">
-                                <g:textField name="toDate" class="span12" size="10" placeholder="ÅÅÅÅ-MM-DD"
-                                             value="${cmd.toDate}"/><span
-                                    class="add-on"><i class="icon-th"></i></span>
+                            <div class="control-group">
+                                <label class="control-label"><g:message code="crmTaskQueryCommand.toDate.label"/></label>
+                                <div class="controls">
+                                    <div class="input-append date">
+                                        <g:textField name="toDate" class="span11" size="10" placeholder="ÅÅÅÅ-MM-DD"
+                                                     value="${cmd.toDate}"/><span
+                                            class="add-on"><i class="icon-th"></i></span>
+                                    </div>
+                                </div>
                             </div>
-                        </f:field>
+                        </div>
 
                         <f:field property="location" label="crmTask.location.label"
                                  input-class="span12"

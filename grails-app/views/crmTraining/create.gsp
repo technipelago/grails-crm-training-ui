@@ -5,10 +5,6 @@
     <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'crmTraining.label', default: 'Training')}"/>
     <title><g:message code="crmTraining.create.title" args="[entityName, crmTraining]"/></title>
-    <r:script>
-    $(document).ready(function() {
-    });
-    </r:script>
 </head>
 
 <body>
@@ -48,7 +44,7 @@
                             <div class="row-fluid">
                                 <f:field property="number" label="crmTraining.number.label" input-class="span6"/>
                                 <f:field property="name" label="crmTraining.name.label" input-class="span11"/>
-                                <f:field property="url" label="crmTraining.url.label" input-class="span6"/>
+                                <f:field property="url" label="crmTraining.url.label" input-class="span11"/>
                             </div>
                         </div>
 
@@ -58,11 +54,39 @@
                                     <g:select name="type.id" from="${metadata.typeList}"
                                               optionKey="id" value="${crmTraining.type?.id}" class="span11"/>
                                 </f:field>
+
+                                <f:field property="scope" label="crmTraining.scope.label" input-class="span11"/>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.price.label"/>
+                                            </label>
+                                            <div class="controls">
+                                                <input type="text" name="price" value="${formatNumber(number:crmTraining.price, minFractionDigits: 2)}" class="span12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.vat.label" default="VAT"/>
+                                            </label>
+                                            <div class="controls">
+                                                <g:select name="vat" from="${metadata.vatList}" value="${formatNumber(number:crmTraining.vat, minFractionDigits: 2)}"
+                                                          optionKey="${{formatNumber(number:it.value, minFractionDigits: 2)}}" optionValue="label" class="span10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="span4">
                             <div class="row-fluid">
+                                <f:field property="maxAttendees" label="crmTraining.maxAttendees.label" input-class="span3"/>
+                                <f:field property="autoConfirm" label="crmTraining.autoConfirm.label" input-class="span3"/>
+                                <f:field property="overbook" label="crmTraining.overbook.label" input-class="span3"/>
                             </div>
                         </div>
 

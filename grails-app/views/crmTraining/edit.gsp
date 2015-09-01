@@ -5,9 +5,32 @@
     <meta name="layout" content="main">
     <g:set var="entityName" value="${message(code: 'crmTraining.label', default: 'Training')}"/>
     <title><g:message code="crmTraining.edit.title" args="[entityName, crmTraining]"/></title>
+    <g:if test="${htmlContent}">
+        <ckeditor:resources/>
+    </g:if>
     <r:script>
     $(document).ready(function() {
-    });
+        <% if (htmlContent) { %>
+        var stylesheet = ["${resource(dir: 'less', file: 'bootstrap.less.css', plugin: 'twitter-bootstrap')}",
+            "${resource(dir: 'less', file: 'crm-ui-bootstrap.less.css', plugin: 'crm-ui-bootstrap')}",
+            "${resource(dir: 'less', file: 'responsive.less.css', plugin: 'twitter-bootstrap')}"];
+            var editor = CKEDITOR.replace('content',
+            {
+                customConfig: "${resource(dir: 'js', file: 'crm-ckeditor-config.js', plugin: 'crm-content-ui')}",
+                stylesSet: "crm-web-styles:${
+            resource(dir: 'js', file: 'crm-ckeditor-styles.js', plugin: 'crm-content-ui')}",
+                baseHref: '',//"${createLink(controller: 'static')}",
+                contentsCss: stylesheet,
+                filebrowserBrowseUrl: "${
+            createLink(controller: 'crmContent', action: 'browse')}?reference=crmTraining@${crmTraining.ident()}&status=shared",
+                filebrowserUploadUrl: "${createLink(controller: 'crmContent', action: 'upload')}",
+                filebrowserImageBrowseUrl: "${
+            createLink(controller: 'crmContent', action: 'browse')}?pattern=image&reference=crmTraining@${
+            crmTraining.ident()}&status=shared",
+                filebrowserImageUploadUrl: "${createLink(controller: 'crmContent', action: 'upload')}"
+            });
+        <% } %>
+        });
     </r:script>
 </head>
 
@@ -41,7 +64,10 @@
                 </li>
                 <li><a href="#desc" data-toggle="tab" accesskey="d"><g:message
                         code="crmTraining.tab.desc.label"/></a></li>
-
+                <g:if test="${htmlContent}">
+                    <li><a href="#html" data-toggle="tab"><g:message code="crmTraining.tab.html.label"
+                                                                     default="Presentation"/>(1)</a></li>
+                </g:if>
             </ul>
 
             <div class="tab-content">
@@ -62,11 +88,39 @@
                                     <g:select name="type.id" from="${metadata.typeList}"
                                               optionKey="id" value="${crmTraining.type?.id}" class="span11"/>
                                 </f:field>
+
+                                <f:field property="scope" label="crmTraining.scope.label" input-class="span11"/>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.price.label"/>
+                                            </label>
+                                            <div class="controls">
+                                                <input type="text" name="price" value="${formatNumber(number:crmTraining.price, minFractionDigits: 2)}" class="span12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.vat.label" default="VAT"/>
+                                            </label>
+                                            <div class="controls">
+                                                <g:select name="vat" from="${metadata.vatList}" value="${formatNumber(number:crmTraining.vat, minFractionDigits: 2)}"
+                                                          optionKey="${{formatNumber(number:it.value, minFractionDigits: 2)}}" optionValue="label" class="span10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="span4">
                             <div class="row-fluid">
+                                <f:field property="maxAttendees" label="crmTraining.maxAttendees.label" input-class="span3"/>
+                                <f:field property="autoConfirm" label="crmTraining.autoConfirm.label" input-class="span3"/>
+                                <f:field property="overbook" label="crmTraining.overbook.label" input-class="span3"/>
                             </div>
                         </div>
 
@@ -75,8 +129,15 @@
 
                 <div class="tab-pane" id="desc">
                     <g:textArea name="description" rows="20" cols="80"
-                            value="${crmTraining.description}" class="span11"/>
+                                value="${crmTraining.description}" class="span11"/>
                 </div>
+
+                <g:if test="${htmlContent}">
+                    <div class="tab-pane" id="html">
+                        <g:textArea id="content" name="text" cols="80" rows="15" class="span11"
+                                                        value="${htmlContent.text}"/>
+                    </div>
+                </g:if>
             </div>
         </div>
 

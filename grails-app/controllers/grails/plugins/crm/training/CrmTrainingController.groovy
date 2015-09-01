@@ -18,6 +18,8 @@ package grails.plugins.crm.training
 
 import grails.plugins.crm.core.TenantUtils
 import grails.plugins.crm.core.WebUtils
+import grails.plugins.crm.content.CrmResourceRef
+import grails.transaction.Transactional
 import org.springframework.dao.DataIntegrityViolationException
 
 /**
@@ -33,13 +35,14 @@ class CrmTrainingController {
     def crmTrainingService
     def crmTaskService
     def userTagService
+    def crmContentService
 
     def index() {
         // If any query parameters are specified in the URL, let them override the last query stored in session.
         def cmd = new CrmTrainingQueryCommand()
         def query = params.getSelectionQuery()
         bindData(cmd, query ?: WebUtils.getTenantData(request, 'crmTrainingQuery'))
-        def events = crmTrainingService.listTrainingEvents([fromDate:new Date() - 5], [max: 5, sort: 'startTime', order: 'asc'])
+        def events = crmTrainingService.listTrainingEvents([fromDate: new Date() - 7], [max: 5, sort: 'startTime', order: 'asc'])
         [cmd: cmd, eventList: events]
     }
 
@@ -66,7 +69,7 @@ class CrmTrainingController {
             if (result.totalCount == 1) {
                 redirect action: "show", id: result.head().ident()
             } else {
-                def events = crmTrainingService.listTrainingEvents([fromDate:new Date() - 5], [max: 5, sort: 'startTime', order: 'asc'])
+                def events = crmTrainingService.listTrainingEvents([fromDate: new Date() - 5], [max: 5, sort: 'startTime', order: 'asc'])
                 [crmTrainingList: result, crmTrainingTotal: result.totalCount, selection: uri, eventList: events]
             }
         } catch (Exception e) {
@@ -80,11 +83,22 @@ class CrmTrainingController {
         redirect(action: 'index')
     }
 
+    private List getVatOptions() {
+        getVatList().collect {
+            [label: "${it}%", value: (it / 100).doubleValue()]
+        }
+    }
+
+    private List<Number> getVatList() {
+        grailsApplication.config.crm.currency.vat.list ?: [0]
+    }
+
     def create() {
         def tenant = TenantUtils.tenant
         def crmTraining = crmTrainingService.createTraining(params)
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
+        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":
@@ -92,13 +106,19 @@ class CrmTrainingController {
             case "POST":
                 bindData(crmTraining, params, [include: CrmTraining.BIND_WHITELIST])
 
-                if (crmTraining.hasErrors() || !crmTraining.save()) {
+                if (crmTraining.save()) {
+                    // TODO hack!
+                    if (!params.text) {
+                        params.text = "<h2>${crmTraining}</h2>\n<p>${crmTraining.description ?: ''}</p>\n"
+                    }
+                    if (params.text) {
+                        crmContentService.createResource(params.text, 'presentation.html', crmTraining, [contentType: 'text/html', status: CrmResourceRef.STATUS_SHARED])
+                    }
+                    flash.success = message(code: 'crmTraining.created.message', args: [message(code: 'crmTraining.label', default: 'Training'), crmTraining.toString()])
+                    redirect(action: "show", id: crmTraining.id)
+                } else {
                     render(view: "create", model: [crmTraining: crmTraining, metadata: metadata])
-                    return
                 }
-
-                flash.success = message(code: 'crmTraining.created.message', args: [message(code: 'crmTraining.label', default: 'Training'), crmTraining.toString()])
-                redirect(action: "show", id: crmTraining.id)
                 break
         }
     }
@@ -111,9 +131,14 @@ class CrmTrainingController {
             return
         }
         def schedule = crmTaskService.list([reference: crmTraining], [:])
-        [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining), events: schedule]
+        [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining), events: schedule, currency: getCurrencyCode()]
     }
 
+    private String getCurrencyCode() {
+        grailsApplication.config.crm.currency.default ?: 'EUR'
+    }
+
+    @Transactional
     def edit(Long id) {
         def tenant = TenantUtils.tenant
         def crmTraining = CrmTraining.findByIdAndTenantId(id, tenant)
@@ -123,32 +148,49 @@ class CrmTrainingController {
             return
         }
 
+        def html = crmContentService.findResourcesByReference(crmTraining, [name: "*.html", status: CrmResourceRef.STATUS_SHARED])?.find {
+            it
+        }
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
+        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":
-                return [crmTraining: crmTraining, metadata: metadata]
+                return [crmTraining: crmTraining, metadata: metadata, htmlContent: html]
             case "POST":
                 if (params.int('version') != null) {
                     if (crmTraining.version > params.int('version')) {
                         crmTraining.errors.rejectValue("version", "crmTraining.optimistic.locking.failure",
                                 [message(code: 'crmTraining.label', default: 'Training')] as Object[],
                                 "Another user has updated this Training while you were editing")
-                        render(view: "edit", model: [crmTraining: crmTraining, metadata: metadata])
+                        render(view: "edit", model: [crmTraining: crmTraining, metadata: metadata, htmlContent: html])
                         return
                     }
                 }
 
                 bindData(crmTraining, params, [include: CrmTraining.BIND_WHITELIST])
 
-                if (!crmTraining.save(flush: true)) {
-                    render(view: "edit", model: [crmTraining: crmTraining, metadata: metadata])
-                    return
+                if (crmTraining.save(flush: true)) {
+                    // TODO hack!
+                    if (!params.text) {
+                        params.text = "<h2>${crmTraining}</h2>\n<p>${crmTraining.description ?: ''}</p>\n"
+                    }
+                    if (html) {
+                        if (params.text) {
+                            def inputStream = new ByteArrayInputStream(params.text.getBytes('UTF-8'))
+                            crmContentService.updateResource(html, inputStream, 'text/html')
+                        } else {
+                            crmContentService.deleteReference(html)
+                        }
+                    } else if (params.text) {
+                        crmContentService.createResource(params.text, 'presentation.html', crmTraining, [contentType: 'text/html', status: CrmResourceRef.STATUS_SHARED])
+                    }
+                    flash.success = message(code: 'crmTraining.updated.message', args: [message(code: 'crmTraining.label', default: 'Training'), crmTraining.toString()])
+                    redirect(action: "show", id: crmTraining.id)
+                } else {
+                    render(view: "edit", model: [crmTraining: crmTraining, metadata: metadata, htmlContent: html])
                 }
-
-                flash.success = message(code: 'crmTraining.updated.message', args: [message(code: 'crmTraining.label', default: 'Training'), crmTraining.toString()])
-                redirect(action: "show", id: crmTraining.id)
                 break
         }
     }

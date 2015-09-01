@@ -89,6 +89,31 @@
 
                                 <dd><g:fieldValue bean="${crmTraining}" field="type"/></dd>
 
+                                <g:if test="${crmTraining.scope}">
+                                    <dt><g:message code="crmTraining.scope.label" default="Scope"/></dt>
+
+                                    <dd><g:fieldValue bean="${crmTraining}" field="scope"/></dd>
+
+                                </g:if>
+
+                                <g:if test="${crmTraining.price != null}">
+                                    <dt><g:message code="crmTraining.price.label" default="Price"/></dt>
+
+                                    <dd>
+                                        <g:formatNumber number="${crmTraining.price}" type="currency" currencyCode="${currency}" minFractionDigits="2" maxFractionDigits="2"/>
+                                    </dd>
+
+                                </g:if>
+
+                                <g:if test="${crmTraining.vat}">
+                                    <dt><g:message code="crmTraining.vat.label" default="VAT"/></dt>
+
+                                    <dd>
+                                        <g:formatNumber number="${crmTraining.vat ?: 0}" type="percent"/>
+                                    </dd>
+
+                                </g:if>
+
                             </dl>
 
                         </div>
@@ -96,6 +121,21 @@
                         <div class="span4">
 
                             <dl>
+
+                                <g:if test="${crmTraining.maxAttendees != null}">
+                                    <dt><g:message code="crmTraining.maxAttendees.label"/></dt>
+                                    <dd><g:formatNumber number="${crmTraining.maxAttendees}"/></dd>
+                                </g:if>
+
+                                <g:if test="${crmTraining.autoConfirm != null}">
+                                    <dt><g:message code="crmTraining.autoConfirm.label"/></dt>
+                                    <dd><g:formatNumber number="${crmTraining.autoConfirm}"/></dd>
+                                </g:if>
+
+                                <g:if test="${crmTraining.overbook != null}">
+                                    <dt><g:message code="crmTraining.overbook.label"/></dt>
+                                    <dd><g:formatNumber number="${crmTraining.overbook}"/></dd>
+                                </g:if>
 
                             </dl>
 

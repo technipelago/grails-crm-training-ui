@@ -83,22 +83,11 @@ class CrmTrainingController {
         redirect(action: 'index')
     }
 
-    private List getVatOptions() {
-        getVatList().collect {
-            [label: "${it}%", value: (it / 100).doubleValue()]
-        }
-    }
-
-    private List<Number> getVatList() {
-        grailsApplication.config.crm.currency.vat.list ?: [0]
-    }
-
     def create() {
         def tenant = TenantUtils.tenant
         def crmTraining = crmTrainingService.createTraining(params)
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
-        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":
@@ -131,11 +120,12 @@ class CrmTrainingController {
             return
         }
         def schedule = crmTaskService.list([reference: crmTraining], [:])
-        [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining), events: schedule, currency: getCurrencyCode()]
-    }
+        def html = crmContentService.findResourcesByReference(crmTraining, [name: "*.html", status: CrmResourceRef.STATUS_SHARED])?.find {
+            it
+        }
 
-    private String getCurrencyCode() {
-        grailsApplication.config.crm.currency.default ?: 'EUR'
+        [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining),
+         htmlContent: html, events: schedule]
     }
 
     @Transactional
@@ -153,7 +143,6 @@ class CrmTrainingController {
         }
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
-        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":

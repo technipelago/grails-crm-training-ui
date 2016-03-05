@@ -33,6 +33,10 @@
                 <li class="active">
                     <a href="#main" data-toggle="tab"><g:message code="crmTraining.tab.main.label"/></a>
                 </li>
+                <g:if test="${htmlContent}">
+                    <li><a href="#html" data-toggle="tab"><g:message code="crmTraining.tab.html.label"
+                                                                     default="Presentation"/>(1)</a></li>
+                </g:if>
                 <li>
                     <a href="#events" data-toggle="tab">
                         <g:message code="crmTraining.tab.events.label"/>
@@ -191,6 +195,12 @@
                     </g:form>
 
                 </div>
+
+                <g:if test="${htmlContent}">
+                    <div class="tab-pane" id="html">
+                        <crm:render template="${htmlContent}" parser="raw" authorized="true"/>
+                    </div>
+                </g:if>
 
                 <div class="tab-pane" id="events">
                     <div class="row-fluid">

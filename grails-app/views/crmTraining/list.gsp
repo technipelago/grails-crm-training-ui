@@ -23,11 +23,11 @@
                 <g:sortableColumn property="name"
                                   title="${message(code: 'crmTraining.name.label', default: 'Name of training')}"/>
 
-                <g:sortableColumn property="url"
-                                  title="${message(code: 'crmTraining.url.label', default: 'URL')}"/>
-
                 <g:sortableColumn property="type.name"
                                   title="${message(code: 'crmTraining.type.label', default: 'Type')}"/>
+
+                <g:sortableColumn property="product"
+                                  title="${message(code: 'crmTraining.product.label', default: 'Product')}"/>
 
             </tr>
             </thead>
@@ -47,13 +47,12 @@
                         </g:link>
                     </td>
 
-
                     <td>
-                        ${fieldValue(bean: crmTraining, field: "url")}
+                        ${fieldValue(bean: crmTraining, field: "type")}
                     </td>
 
                     <td>
-                        ${fieldValue(bean: crmTraining, field: "type")}
+                        ${fieldValue(bean: crmTraining, field: "product")}
                     </td>
                 </tr>
             </g:each>

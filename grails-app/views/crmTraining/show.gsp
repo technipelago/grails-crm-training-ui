@@ -33,14 +33,6 @@
                 <li class="active">
                     <a href="#main" data-toggle="tab"><g:message code="crmTraining.tab.main.label"/></a>
                 </li>
-                <g:if test="${crmTraining.description}">
-                    <li>
-                        <a href="#desc" data-toggle="tab">
-                            <g:message code="crmTraining.tab.desc.label"/>
-                            <crm:countIndicator count="1"/>
-                        </a>
-                    </li>
-                </g:if>
                 <li>
                     <a href="#events" data-toggle="tab">
                         <g:message code="crmTraining.tab.events.label"/>
@@ -72,10 +64,14 @@
 
                                 </g:if>
 
-                                <g:if test="${crmTraining.url}">
-                                    <dt><g:message code="crmTraining.url.label" default="URL"/></dt>
+                                <g:if test="${crmTraining.product}">
+                                    <dt><g:message code="crmTraining.product.label" default="Product"/></dt>
 
-                                    <dd><g:fieldValue bean="${crmTraining}" field="url"/></dd>
+                                    <dd>
+                                        <g:link mapping="crm-product-show" params="${[id: crmTraining.product]}">
+                                            <g:fieldValue bean="${crmTraining}" field="product"/>
+                                        </g:link>
+                                    </dd>
 
                                 </g:if>
 
@@ -93,24 +89,6 @@
                                     <dt><g:message code="crmTraining.scope.label" default="Scope"/></dt>
 
                                     <dd><g:fieldValue bean="${crmTraining}" field="scope"/></dd>
-
-                                </g:if>
-
-                                <g:if test="${crmTraining.price != null}">
-                                    <dt><g:message code="crmTraining.price.label" default="Price"/></dt>
-
-                                    <dd>
-                                        <g:formatNumber number="${crmTraining.price}" type="currency" currencyCode="${currency}" minFractionDigits="2" maxFractionDigits="2"/>
-                                    </dd>
-
-                                </g:if>
-
-                                <g:if test="${crmTraining.vat}">
-                                    <dt><g:message code="crmTraining.vat.label" default="VAT"/></dt>
-
-                                    <dd>
-                                        <g:formatNumber number="${crmTraining.vat ?: 0}" type="percent"/>
-                                    </dd>
 
                                 </g:if>
 
@@ -142,6 +120,13 @@
                         </div>
 
                     </div>
+
+                    <g:if test="${crmTraining.description}">
+                        <dl style="margin-top: 0;">
+                            <dt><g:message code="crmTraining.description.label" default="Description"/></dt>
+                            <dd><g:decorate encode="HTML" nlbr="true">${crmTraining.description}</g:decorate></dd>
+                        </dl>
+                    </g:if>
 
                     <g:form>
                         <g:hiddenField name="id" value="${crmTraining.id}"/>
@@ -206,14 +191,6 @@
                     </g:form>
 
                 </div>
-
-                <g:if test="${crmTraining.description}">
-                    <div class="tab-pane" id="desc">
-                        <p>
-                            <g:decorate include="markdown">${crmTraining.description}</g:decorate>
-                        </p>
-                    </div>
-                </g:if>
 
                 <div class="tab-pane" id="events">
                     <div class="row-fluid">

@@ -9,7 +9,7 @@
     <tbody>
     <g:each in="${list}" var="crmTask">
         <tr class="${crmTask.completed ? 'disabled' : ''}">
-            <td>
+            <td class="nowrap">
                 <g:link controller="crmTask" action="show" id="${crmTask.id}">
                     <g:formatDate type="date" date="${crmTask.startTime}"/>
                 </g:link>

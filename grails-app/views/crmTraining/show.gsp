@@ -102,18 +102,15 @@
                                         <g:formatNumber number="${crmTraining.price}" type="currency"
                                                         currencyCode="${currency}" minFractionDigits="2"
                                                         maxFractionDigits="2"/>
+
+                                        <g:if test="${crmTraining.vat}">
+                                            <g:message code="crmTraining.vat.ex.label" default="excl. {0} VAT"
+                                                       args="${[formatNumber(number: crmTraining.vat, type: 'percent')]}"/>
+                                        </g:if>
                                     </dd>
 
                                 </g:if>
 
-                                <g:if test="${crmTraining.vat}">
-                                    <dt><g:message code="crmTraining.vat.label" default="VAT"/></dt>
-
-                                    <dd>
-                                        <g:formatNumber number="${crmTraining.vat ?: 0}" type="percent"/>
-                                    </dd>
-
-                                </g:if>
                             </dl>
 
                         </div>

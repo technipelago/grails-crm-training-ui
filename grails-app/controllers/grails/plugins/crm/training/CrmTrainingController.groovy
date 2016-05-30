@@ -89,6 +89,7 @@ class CrmTrainingController {
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
         metadata.vatList = getVatOptions()
+        metadata.currency = grailsApplication.config.crm.currency.default ?: 'EUR'
 
         switch (request.method) {
             case "GET":
@@ -124,9 +125,10 @@ class CrmTrainingController {
         def html = crmContentService.findResourcesByReference(crmTraining, [name: "*.html", status: CrmResourceRef.STATUS_SHARED])?.find {
             it
         }
+        def currency = grailsApplication.config.crm.currency.default ?: 'EUR'
 
         [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining),
-         htmlContent: html, events: schedule]
+         currency: currency, htmlContent: html, events: schedule]
     }
 
     @Transactional
@@ -145,6 +147,7 @@ class CrmTrainingController {
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
         metadata.vatList = getVatOptions()
+        metadata.currency = grailsApplication.config.crm.currency.default ?: 'EUR'
 
         switch (request.method) {
             case "GET":

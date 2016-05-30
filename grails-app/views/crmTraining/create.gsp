@@ -42,7 +42,8 @@
 
                         <div class="span4">
                             <div class="row-fluid">
-                                <f:field property="number" label="crmTraining.number.label" input-class="span6" input-autofocus=""/>
+                                <f:field property="number" label="crmTraining.number.label" input-class="span6"
+                                         input-autofocus=""/>
                                 <f:field property="product" label="crmTraining.product.label" input-class="span6"/>
                                 <f:field property="name" label="crmTraining.name.label" input-class="span11"/>
                             </div>
@@ -56,13 +57,46 @@
                                 </f:field>
 
                                 <f:field property="scope" label="crmTraining.scope.label" input-class="span11"/>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.price.label"/>
+                                            </label>
+
+                                            <div class="controls">
+                                                <input type="text" name="price"
+                                                       value="${formatNumber(number: crmTraining.price, minFractionDigits: 2)}"
+                                                       class="span12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.vat.label" default="VAT"/>
+                                            </label>
+
+                                            <div class="controls">
+                                                <g:select name="vat" from="${metadata.vatList}"
+                                                          value="${formatNumber(number: crmTraining.vat, minFractionDigits: 2)}"
+                                                          optionKey="${{
+                                                              formatNumber(number: it.value, minFractionDigits: 2)
+                                                          }}" optionValue="label" class="span10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="span4">
                             <div class="row-fluid">
-                                <f:field property="maxAttendees" label="crmTraining.maxAttendees.label" input-class="span3"/>
-                                <f:field property="autoConfirm" label="crmTraining.autoConfirm.label" input-class="span3"/>
+                                <f:field property="maxAttendees" label="crmTraining.maxAttendees.label"
+                                         input-class="span3"/>
+                                <f:field property="autoConfirm" label="crmTraining.autoConfirm.label"
+                                         input-class="span3"/>
                                 <f:field property="overbook" label="crmTraining.overbook.label" input-class="span3"/>
                             </div>
                         </div>
@@ -82,7 +116,6 @@
         <div class="form-actions">
             <crm:button visual="success" icon="icon-ok icon-white" label="crmTraining.button.save.label"/>
         </div>
-
 
     </f:with>
 

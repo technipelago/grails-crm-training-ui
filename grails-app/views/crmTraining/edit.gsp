@@ -90,6 +90,37 @@
                                 </f:field>
 
                                 <f:field property="scope" label="crmTraining.scope.label" input-class="span11"/>
+                                <div class="row-fluid">
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.price.label"/>
+                                            </label>
+
+                                            <div class="controls">
+                                                <input type="text" name="price"
+                                                       value="${formatNumber(number: crmTraining.price, minFractionDigits: 2)}"
+                                                       class="span12"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="span6">
+                                        <div class="control-group">
+                                            <label class="control-label">
+                                                <g:message code="crmTraining.vat.label" default="VAT"/>
+                                            </label>
+
+                                            <div class="controls">
+                                                <g:select name="vat" from="${metadata.vatList}"
+                                                          value="${formatNumber(number: crmTraining.vat, minFractionDigits: 2)}"
+                                                          optionKey="${{
+                                                              formatNumber(number: it.value, minFractionDigits: 2)
+                                                          }}" optionValue="label" class="span10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

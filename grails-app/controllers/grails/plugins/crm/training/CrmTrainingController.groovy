@@ -88,6 +88,7 @@ class CrmTrainingController {
         def crmTraining = crmTrainingService.createTraining(params)
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
+        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":
@@ -143,6 +144,7 @@ class CrmTrainingController {
         }
         def metadata = [:]
         metadata.typeList = CrmTrainingType.findAllByTenantId(tenant)
+        metadata.vatList = getVatOptions()
 
         switch (request.method) {
             case "GET":
@@ -225,5 +227,15 @@ class CrmTrainingController {
         }
         userTagService.untag(crmTraining, grailsApplication.config.crm.tag.favorite, crmSecurityService.currentUser?.username, TenantUtils.tenant)
         redirect(action: 'show', id: params.id)
+    }
+
+    private List getVatOptions() {
+        getVatList().collect {
+            [label: "${it}%", value: (it / 100).doubleValue()]
+        }
+    }
+
+    private List<Number> getVatList() {
+        grailsApplication.config.crm.currency.vat.list ?: [0]
     }
 }

@@ -95,7 +95,25 @@
                                     <dd><g:fieldValue bean="${crmTraining}" field="scope"/></dd>
 
                                 </g:if>
+                                <g:if test="${crmTraining.price != null}">
+                                    <dt><g:message code="crmTraining.price.label" default="Price"/></dt>
 
+                                    <dd>
+                                        <g:formatNumber number="${crmTraining.price}" type="currency"
+                                                        currencyCode="${currency}" minFractionDigits="2"
+                                                        maxFractionDigits="2"/>
+                                    </dd>
+
+                                </g:if>
+
+                                <g:if test="${crmTraining.vat}">
+                                    <dt><g:message code="crmTraining.vat.label" default="VAT"/></dt>
+
+                                    <dd>
+                                        <g:formatNumber number="${crmTraining.vat ?: 0}" type="percent"/>
+                                    </dd>
+
+                                </g:if>
                             </dl>
 
                         </div>

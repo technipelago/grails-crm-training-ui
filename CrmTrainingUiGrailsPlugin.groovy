@@ -16,8 +16,8 @@
 
 class CrmTrainingUiGrailsPlugin {
     def groupId = ""
-    def version = "2.4.1-SNAPSHOT"
-    def grailsVersion = "2.2 > *"
+    def version = "2.4.1"
+    def grailsVersion = "2.4 > *"
     def dependsOn = [:]
     def loadAfter = ['crmTraining']
     def pluginExcludes = [

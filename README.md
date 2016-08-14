@@ -11,3 +11,7 @@ With CRM we mean features like:
 - Project Management
 
 This plugin adds an administration (CRUD) user interface for training/conference administration. Domain classes and services are handled by plugin crm-training.
+
+### Documentation
+
+Complete documentation for this plugin can be found at [gr8crm.github.io](http://gr8crm.github.io/plugins/crm-training-ui/)

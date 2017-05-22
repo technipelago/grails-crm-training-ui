@@ -1,6 +1,7 @@
 <table class="table table-striped">
     <thead>
     <tr>
+        <th><g:message code="crmTask.number.label" default="Number"/></th>
         <th><g:message code="crmTask.date.label" default="Date"/></th>
         <th><g:message code="crmTask.name.label" default="Name"/></th>
         <th><g:message code="crmTask.location.label" default="Location"/></th>
@@ -9,6 +10,11 @@
     <tbody>
     <g:each in="${list}" var="crmTask">
         <tr class="${crmTask.completed ? 'disabled' : ''}">
+            <td class="nowrap">
+                <g:link controller="crmTask" action="show" id="${crmTask.id}">
+                    ${fieldValue(bean: crmTask, field: "number")}
+                </g:link>
+            </td>
             <td class="nowrap">
                 <g:link controller="crmTask" action="show" id="${crmTask.id}">
                     <g:formatDate type="date" date="${crmTask.startTime}"/>

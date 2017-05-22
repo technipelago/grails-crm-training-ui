@@ -61,50 +61,28 @@
 
         <crm:paginate total="${crmTrainingTotal}"/>
 
-        <div class="form-actions  btn-toolbar">
-            <g:form>
-                <input type="hidden" name="offset" value="${params.offset ?: ''}"/>
-                <input type="hidden" name="max" value="${params.max ?: ''}"/>
-                <input type="hidden" name="sort" value="${params.sort ?: ''}"/>
-                <input type="hidden" name="order" value="${params.order ?: ''}"/>
+        <g:form class="form-actions btn-toolbar">
+            <input type="hidden" name="offset" value="${params.offset ?: ''}"/>
+            <input type="hidden" name="max" value="${params.max ?: ''}"/>
+            <input type="hidden" name="sort" value="${params.sort ?: ''}"/>
+            <input type="hidden" name="order" value="${params.order ?: ''}"/>
 
-                <g:each in="${selection.selectionMap}" var="entry">
-                    <input type="hidden" name="${entry.key}" value="${entry.value}"/>
-                </g:each>
+            <g:each in="${selection.selectionMap}" var="entry">
+                <input type="hidden" name="${entry.key}" value="${entry.value}"/>
+            </g:each>
 
-                <crm:selectionMenu visual="primary"/>
+            <crm:selectionMenu visual="primary"/>
 
-                <g:if test="${crmTrainingTotal}">
-                    <div class="btn-group">
-                        <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-print icon-white"></i>
-                            <g:message code="crmTraining.button.print.label" default="Print"/>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <crm:hasPermission permission="crmTraining:print">
-                                <li>
-                                    <select:link action="print" accesskey="p" target="pdf" selection="${selection}">
-                                        <g:message code="crmTraining.button.print.pdf.label" default="Print to PDF"/>
-                                    </select:link>
-                                </li>
-                            </crm:hasPermission>
-                            <crm:hasPermission permission="crmTraining:export">
-                                <li>
-                                    <select:link action="export" accesskey="e" selection="${selection}">
-                                        <g:message code="crmTraining.button.export.calc.label"
-                                                   default="Print to spreadsheet"/>
-                                    </select:link>
-                                </li>
-                            </crm:hasPermission>
-                        </ul>
-                    </div>
-                </g:if>
+            <g:if test="${crmTrainingTotal}">
+                <select:link action="export" accesskey="p" selection="${selection}" class="btn btn-info">
+                    <i class="icon-print icon-white"></i>
+                    <g:message code="crmTraining.button.export.label" default="Print/Export"/>
+                </select:link>
+            </g:if>
 
-                <crm:button type="link" group="true" action="create" visual="success" icon="icon-file icon-white"
-                            label="crmTraining.button.create.label" permission="crmTraining:create"/>
-            </g:form>
-        </div>
+            <crm:button type="link" group="true" action="create" visual="success" icon="icon-file icon-white"
+                        label="crmTraining.button.create.label" permission="crmTraining:create"/>
+        </g:form>
 
     </div>
 

@@ -22,6 +22,8 @@ import grails.plugins.crm.content.CrmResourceRef
 import grails.transaction.Transactional
 import org.springframework.dao.DataIntegrityViolationException
 
+import java.util.concurrent.TimeoutException
+
 /**
  * CrmTraining CRUD controller.
  */
@@ -206,6 +208,42 @@ class CrmTrainingController {
         catch (DataIntegrityViolationException e) {
             flash.error = message(code: 'crmTraining.not.deleted.message', args: [message(code: 'crmTraining.label', default: 'Training'), id])
             redirect(action: "show", id: id)
+        }
+    }
+
+    def export() {
+        def user = crmSecurityService.getUserInfo()
+        def ns = params.ns ?: 'crmTraining'
+        if (request.post) {
+            def filename = message(code: 'crmTraining.label', default: 'Training')
+            try {
+                def timeout = (grailsApplication.config.crm.training.export.timeout ?: 60) * 1000
+                def topic = params.topic ?: 'export'
+                def result = event(for: ns, topic: topic,
+                        data: params + [user: user, tenant: TenantUtils.tenant, locale: request.locale, filename: filename]).waitFor(timeout)?.value
+                if (result?.file) {
+                    try {
+                        WebUtils.inlineHeaders(response, result.contentType, result.filename ?: ns)
+                        WebUtils.renderFile(response, result.file)
+                    } finally {
+                        result.file.delete()
+                    }
+                    return null // Success
+                } else {
+                    flash.warning = message(code: 'crmTraining.export.nothing.message', default: 'Nothing was exported')
+                }
+            } catch (TimeoutException te) {
+                flash.error = message(code: 'crmTraining.export.timeout.message', default: 'Export did not complete')
+            } catch (Exception e) {
+                log.error("Export event throwed an exception", e)
+                flash.error = message(code: 'crmTraining.export.error.message', default: 'Export failed due to an error', args: [e.message])
+            }
+            redirect(action: "index")
+        } else {
+            def uri = params.getSelectionURI()
+            def layouts = event(for: ns, topic: (params.topic ?: 'exportLayout'),
+                    data: [tenant: TenantUtils.tenant, username: user.username, uri: uri, locale: request.locale]).waitFor(10000)?.values?.flatten()
+            [layouts: layouts, selection: uri]
         }
     }
 

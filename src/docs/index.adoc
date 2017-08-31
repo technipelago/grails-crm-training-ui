@@ -39,6 +39,7 @@ With this plugin you get a basic *CRUD* controller where you can create new, sea
 
 == Changes
 
+2.4.2:: Add export feature and include 'number' column in list of events
 2.4.1:: Added training presentation preview and some more UI tweaks.
 2.4.0:: First public release
 

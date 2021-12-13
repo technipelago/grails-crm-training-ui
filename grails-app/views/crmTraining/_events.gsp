@@ -1,3 +1,4 @@
+<g:if test="${list}">
 <ul class="nav nav-list">
     <li class="nav-header"><g:message code="crmTraining.current.events.title"/></li>
     <g:each in="${list}" var="crmTask">
@@ -7,3 +8,4 @@
         </g:link></li>
     </g:each>
 </ul>
+</g:if>

@@ -36,7 +36,7 @@
 </table>
 
 <div class="form-actions btn-toolbar">
-    <crm:button type="link" group="true" controller="crmTask" action="create" params="${[ref: reference, name: bean.toString()]}"
+    <crm:button type="link" group="true" controller="crmTask" action="create" params="${[ref: reference, name: bean.toString(), 'type.id': taskType?.id]}"
                 visual="success"
                 icon="icon-file icon-white"
                 label="crmTraining.button.create.event.label" permission="crmTask:create"/>

@@ -128,9 +128,10 @@ class CrmTrainingController {
             it
         }
         def currency = grailsApplication.config.crm.currency.default ?: 'EUR'
-
+        def taskTypeParam = grailsApplication.config.crm.training.task.type ?: 'training'
+        def taskType = crmTaskService.getTaskType(taskTypeParam)
         [crmTraining: crmTraining, reference: crmCoreService.getReferenceIdentifier(crmTraining),
-         currency: currency, htmlContent: html, events: schedule]
+         currency: currency, htmlContent: html, events: schedule, taskType: taskType]
     }
 
     @Transactional
